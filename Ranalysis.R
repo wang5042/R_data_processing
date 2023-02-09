@@ -3,11 +3,11 @@ library(dplyr)
 statistic <- read.csv("D:/PycharmProjects/staticanalysis/Stats.csv")
 statistic <- data.frame(statistic[c(28:81),c(1:9)])
 statistic <- na.omit(statistic)
+#Clean the dataset
 statistic$xylose_Induction <- as.character(statistic$PC_Induction) 
-#?????յ???Ũ??Ϊ?ַ???
 statistic$Concentration_CA <- as.character(statistic$Concentration_CA)
 statistic$Concentration_IPTG <- as.character(statistic$Concentration_IPTG)
-#?涨?յ???Ũ?ȱ?��????
+#Rename the catergory of the variables
 statistic$Concentration_CA <- factor(statistic$Concentration_CA, levels = c('-4','-5','-6','-7','-8','-9','-10','0'))
 statistic$Concentration_IPTG <- factor(statistic$Concentration_IPTG, levels = c('-4','-5','-6','-7','-8','-9','-10','0'))
 #C6_Test <- statistic[c(1:96),c(2:3,5)]
@@ -53,7 +53,7 @@ print(p1)
 p2 <- ggplot(C12_Test, aes(x=Concentration, y=Species,fill = RPU_EXPRESSION))+ xlab("C12_concentration(M)") + ylab("Part")
 p2 <- p2+geom_raster()+scale_fill_gradient2(low="#003366", high="#990033", mid="white")
 print(p2)
-#ֻ??ʾ??ǩ??
+#ֻThe following above is the plot for heat map
 p1 <- ggplot(RPU_38_xyl ,aes(x=Xylose_Concentration, y=Induction_Strength,group = PC_Induction, color = PC_Induction ))
 p1 <- p1 + xlab('Xylose Concentration(mM)') +ylab('Induce_Strength') + ggtitle("mut38-YFP-xyl-RFP curve")  
 p1 <- p1+ theme(plot.title = element_text(hjust = 0.5))+geom_point()
@@ -70,7 +70,7 @@ p4 <- p4 + annotation_logticks(sides = 'b') + scale_x_log10()+ ggtitle("CY2004+Y
 p4 <- p4+ theme(plot.title = element_text(hjust = 0.5))
 p4 <- p4 +geom_smooth()
 print(p1)
-#???????????ݲ???
+#The following above is plot for EC50 curve plot
 Data_Comparison <- RFP %>% group_by(Strain,Treatment) 
 Data_Comparison <- Data_Comparison %>%
   summarise(mean = mean(RPU_RFP),
@@ -80,7 +80,7 @@ fit <- lm(RPU_YFP ~ Treatment, data = YFP_xyl_38)
 aov(fit) %>% TukeyHSD(conf.level = 0.95)
 kruskal.test(RPU ~ Treatment, data = RFP_xyl_38)
 
-#??ͼǰ׼??????
+#This is the data processing and statistic calculation of the sample and their ANNOVA test
 Datameans_YFP <- YFP_xyl_38 %>% 
   group_by(Treatment) %>% 
   summarize(
@@ -96,7 +96,7 @@ Datameans_RFP <- RFP_38_xyl %>%
     hi = mean(RPU_RFP)+sd(RPU_RFP),
   )
 
-#??ͼ
+#This is also the statistic analysis
 plot <- ggplot(RFP_xyl_38, aes(x=Treatment, y=RPU_RFP)) +
   geom_bar(aes(x = Treatment, y=mean),Data_Comparison, position=position_dodge(0.5),
            stat = 'identity',width = 0.5)+
